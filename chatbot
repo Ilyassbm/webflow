@@ -1,0 +1,80 @@
+// Définition des réponses du chatbot
+const responses = {
+  "bonjour": "Bonjour et bienvenue sur le site d'Ilyass BM. Comment puis-je vous assister aujourd'hui ?",
+  "contact": "Vous pouvez me contacter par email à contact@maka.business ou par téléphone au 0769722678. Je serai ravi de discuter de votre projet.",
+  "services": "Je propose la création de sites vitrines, sites e-commerce et blogs. Tous mes projets sont livrés en moins de 3 semaines. Je suis spécialisé dans les projets à Mayotte. Quel type de site vous intéresse ?",
+  "tarifs": "La tarification dépend de chaque projet. Chaque site est unique et nécessite une évaluation personnalisée. Contactez-moi pour discuter de votre projet et obtenir un devis sur mesure.",
+  "portfolio": "Vous pouvez consulter mon portfolio à l'adresse www.ilyassbm.fr/projets. Parmi mes réalisations, vous trouverez notamment le site du Centre social Kergomard et le site de LaZone.",
+  "technologies": "Je travaille principalement avec Webflow, Figma et Framer pour créer des sites web modernes et performants. Ces outils me permettent de concevoir et développer rapidement des sites de grande qualité.",
+  "processus": "Mon processus de travail comprend les étapes suivantes : 1) Appel de découverte, 2) Validation du devis, 3) Design, 4) Développement, 5) Livraison. Tout cela en moins de 3 semaines, sinon le projet est gratuit !",
+  "delais": "Je m'engage à livrer tous mes projets en moins de 3 semaines. Si ce délai n'est pas respecté, le projet est gratuit. Cette garantie assure que votre site sera opérationnel rapidement.",
+  "specialite": "Je suis spécialisé dans la création de sites web pour Mayotte. Ma connaissance du marché local me permet de créer des sites parfaitement adaptés aux besoins spécifiques de cette région.",
+  "engagement": "Je m'engage à livrer votre projet en moins de 3 semaines. Si ce délai n'est pas respecté, le projet est gratuit. C'est ma garantie de rapidité et d'efficacité.",
+  "default": "Je n'ai pas tout à fait saisi votre demande. Pouvez-vous reformuler ou choisir parmi ces sujets : contact, services, tarifs, portfolio, technologies, processus de travail, délais, ou ma spécialité pour Mayotte ?"
+};
+
+// Fonction pour obtenir la réponse du chatbot
+function getBotResponse(input) {
+  input = input.toLowerCase();
+  for (let key in responses) {
+    if (input.includes(key)) {
+      return responses[key];
+    }
+  }
+  return responses.default;
+}
+
+// Fonction pour ajouter un message au chat
+function addMessage(message, isUser = false) {
+  const chatBox = document.getElementById("chat-box");
+  const messageDiv = document.createElement("div");
+  messageDiv.classList.add(isUser ? "user-message" : "bot-message");
+  messageDiv.textContent = message;
+  chatBox.appendChild(messageDiv);
+  chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+// Fonction pour gérer l'envoi d'un message
+function sendMessage() {
+  const userInput = document.getElementById("user-input");
+  const message = userInput.value.trim();
+  if (message !== "") {
+    addMessage(message, true);
+    setTimeout(() => {
+      const botResponse = getBotResponse(message);
+      addMessage(botResponse);
+    }, 500);
+    userInput.value = "";
+  }
+}
+
+// Fonction pour initialiser le chatbot
+function initChatbot() {
+  addMessage("Bonjour, je suis l'assistant virtuel d'Ilyass BM. Comment puis-je vous aider aujourd'hui ?");
+}
+
+// Fonction pour créer l'interface du chatbot
+function createChatbotInterface() {
+  const chatbotContainer = document.createElement("div");
+  chatbotContainer.id = "chatbot-container";
+  chatbotContainer.innerHTML = `
+    <div id="chat-box"></div>
+    <input type="text" id="user-input" placeholder="Tapez votre message...">
+    <button id="send-button">Envoyer</button>
+  `;
+  document.body.appendChild(chatbotContainer);
+
+  // Ajout des écouteurs d'événements
+  document.getElementById("send-button").addEventListener("click", sendMessage);
+  document.getElementById("user-input").addEventListener("keypress", function(e) {
+    if (e.key === "Enter") {
+      sendMessage();
+    }
+  });
+}
+
+// Initialisation du chatbot au chargement de la page
+window.addEventListener('load', () => {
+  createChatbotInterface();
+  initChatbot();
+});
